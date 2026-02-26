@@ -34,9 +34,19 @@ spec:
         - name: POSTGRES_PASSWORD
           value: postgres
         - name: op1-cust-onboarding-apiPort
-          value: "8080"
+          value: "9090"
         - name: op1-cust-onboarding-apiName
-          value: apigateway
+          value: op1-cust-onboarding-api
+        - name: RabbitMQ_HostName
+          value: rabbitmq
+        - name: RabbitMQ_Port
+          value: "15672"
+        - name: RabbitMQ_UserName
+          value: guest
+        - name: RabbitMQ_Password
+          value: guest
+        - name: RabbitMQ_Products_Exchange
+          value: profile.exchange
         - name: REDIS_HOST
           value: redis
         - name: REDIS_PORT

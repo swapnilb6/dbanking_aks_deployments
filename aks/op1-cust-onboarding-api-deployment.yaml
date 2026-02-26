@@ -41,7 +41,7 @@ spec:
           value: guest
         - name: RabbitMQ_Password
           value: guest
-        - name: RabbitMQ_Products_Exchange
+        - name: RabbitMQ_Users_Exchange
           value: customer.exchange
         - name: op2-cust-profilemanagement-apiPort
           value: "9090"

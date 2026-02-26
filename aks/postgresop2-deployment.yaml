@@ -4,16 +4,16 @@ metadata:
   name: postgresop2-deployment
   namespace: dbanking-namespace
   labels:
-    app: postgres
+    app: postgres-op2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-op2
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-op2
     spec:
       containers:
       - name: postgres

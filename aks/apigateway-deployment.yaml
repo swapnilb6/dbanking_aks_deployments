@@ -20,3 +20,10 @@ spec:
         image: dbankingop1cntrregistry.azurecr.io/apigateway:latest
         ports:
         - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: Jwt__Authority
+          value: "https://example.auth0.com/"
+        - name: Jwt__Audience
+          value: "dbanking-api"

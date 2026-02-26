@@ -3,8 +3,8 @@ services:
   postgres1-container:
     image: dbanking-op1-postgres:latest
     build:
-      context: ./postgresop1
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: postgresop1/Dockerfile
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -18,8 +18,8 @@ services:
   postgres2-container:
     image: dbanking-op2-postgres:latest
     build:
-      context: ./postgresop2
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: postgresop2/Dockerfile
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
