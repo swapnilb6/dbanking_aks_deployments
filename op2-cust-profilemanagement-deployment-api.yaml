@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: op2-cust-profilemanagement-api-deployment
+  namespace: dbanking-namespace
+  labels:
+    app: op2-cust-profilemanagement-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: op2-cust-profilemanagement-api
+  template:
+    metadata:
+      labels:
+        app: op2-cust-profilemanagement-api
+    spec:
+      containers:
+      - name: op2-cust-profilemanagement-api
+        image: dbankingop1cntrregistry.azurecr.io/op2-cust-profilemanagement-api:latest
+        ports:
+        - containerPort: 9090
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: POSTGRES_HOST
+          value: postgres2-container
+        - name: POSTGRES_PORT
+          value: "5434"
+        - name: POSTGRES_DATABASE
+          value: dBanking_profileMgt
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: op1-cust-onboarding-apiPort
+          value: "8080"
+        - name: op1-cust-onboarding-apiName
+          value: apigateway
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"

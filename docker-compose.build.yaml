@@ -1,0 +1,116 @@
+version: '3.8'
+services:
+  postgres1-container:
+    image: dbanking-op1-postgres:latest
+    build:
+      context: ./postgresop1
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dBanking_CMS
+    ports:
+      - "5432:5432"
+    networks:
+      - op1-net
+
+
+  postgres2-container:
+    image: dbanking-op2-postgres:latest
+    build:
+      context: ./postgresop2
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dBanking_profileMgt
+    ports:
+      - "5434:5434"
+    networks:
+      - op2-net
+
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - dbanking-network
+
+
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - dbanking-network
+  
+  apigateway:
+    image: apigateway:latest
+    build:
+      context: ./dBanking.CustomerOnboarding
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5000:8080"
+    networks:
+      - dbanking-network
+    depends_on:
+      - op1-cust-onboarding-api
+      - op2-cust-profilemanagement-api
+
+
+  op1-cust-onboarding-api:
+    image: op1-cust-onboarding-api:latest
+    build:
+      context: ./dBanking.CustomerOnboarding
+      dockerfile: dBanking.CustomerOnboarding.API/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      POSTGRES_HOST: postgres1-container
+      POSTGRES_PORT: "5432"
+      POSTGRES_DATABASE: dBanking_CMS
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      RabbitMQ_HostName: rabbitmq
+      RabbitMQ_Port: "5672"
+      RabbitMQ_UserName: guest
+      RabbitMQ_Password: guest
+      RabbitMQ_Users_Exchange: customer.exchange
+    networks:
+      - op1-net
+      - dbanking-network
+    depends_on:
+      - postgres1-container
+
+
+  op2-cust-profilemanagement-api:
+    image: op2-cust-profilemanagement-api:latest
+    build:
+      context: ./dBanking.ProfileManagement
+      dockerfile: dBanking.ProfileManagement/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      POSTGRES_HOST: postgres2-container
+      POSTGRES_PORT: "5434"
+      POSTGRES_DATABASE: dBanking_profileMgt
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      RabbitMQ_HostName: rabbitmq
+      RabbitMQ_Port: "5672"
+      RabbitMQ_UserName: guest
+      RabbitMQ_Password: guest
+      RabbitMQ_Products_Exchange: profile.exchange
+    networks:
+      - op2-net
+      - dbanking-network
+    depends_on:
+      - postgres2-container
+
+networks:
+  dbanking-network:
+    driver: bridge
+  op1-net:
+    driver: bridge
+  op2-net:
+    driver: bridge

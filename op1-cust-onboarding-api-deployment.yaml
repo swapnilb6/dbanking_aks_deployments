@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: op1-cust-onboarding-api-deployment
+  namespace: dbanking-namespace
+  labels:
+    app: op1-cust-onboarding-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: op1-cust-onboarding-api
+  template:
+    metadata:
+      labels:
+        app: op1-cust-onboarding-api
+    spec:
+      containers:
+      - name: op1-cust-onboarding-api
+        image: dbankingop1cntrregistry.azurecr.io/op1-cust-onboarding-api:latest
+        ports:
+        - containerPort: 9090
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: POSTGRES_HOST
+          value: postgres1-container
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DATABASE
+          value: dBanking_CMS
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: RabbitMQ_HostName
+          value: rabbitmq
+        - name: RabbitMQ_Port
+          value: "5672"
+        - name: RabbitMQ_UserName
+          value: guest
+        - name: RabbitMQ_Password
+          value: guest
+        - name: RabbitMQ_Products_Exchange
+          value: customer.exchange
+        - name: op2-cust-profilemanagement-apiPort
+          value: "9090"
+        - name: op2-cust-profilemanagement-apiName
+          value: apigateway
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"
